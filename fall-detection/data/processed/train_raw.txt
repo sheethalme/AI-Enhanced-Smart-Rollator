@@ -1,0 +1,71 @@
+Features: raw  |  65,237 windows, 62 subjects, fall rate 6.4%
+
+======================================================================
+FEATURE SET: all (89 features)
+======================================================================
+
+  within-pool, 5-fold leave-subjects-out (all windows)
+    sensitivity  95.1%   specificity  99.8%   false-alarm rate  0.23%
+                    pred 0   pred 1
+    true 0 (ADL)    60,912      139
+    true 1 (fall)      207    3,979
+
+    ...of which sisfall windows
+    sensitivity  95.1%   specificity  99.8%   false-alarm rate  0.20%
+                    pred 0   pred 1
+    true 0 (ADL)    53,278      105
+    true 1 (fall)      182    3,539
+
+    ...of which mobifall windows
+    sensitivity  94.6%   specificity  99.6%   false-alarm rate  0.44%
+                    pred 0   pred 1
+    true 0 (ADL)     7,634       34
+    true 1 (fall)       25      440
+
+  cross-dataset: train sisfall -> test ALL mobifall
+    sensitivity  92.0%   specificity  98.7%   false-alarm rate  1.32%
+                    pred 0   pred 1
+    true 0 (ADL)     7,567      101
+    true 1 (fall)       37      428
+
+  cross-dataset: train mobifall -> test ALL sisfall
+    sensitivity  64.9%   specificity  99.7%   false-alarm rate  0.26%
+                    pred 0   pred 1
+    true 0 (ADL)    53,243      140
+    true 1 (fall)    1,305    2,416
+
+======================================================================
+FEATURE SET: invariant (23 features)
+======================================================================
+
+  within-pool, 5-fold leave-subjects-out (all windows)
+    sensitivity  91.9%   specificity  99.5%   false-alarm rate  0.48%
+                    pred 0   pred 1
+    true 0 (ADL)    60,756      295
+    true 1 (fall)      337    3,849
+
+    ...of which sisfall windows
+    sensitivity  92.9%   specificity  99.5%   false-alarm rate  0.49%
+                    pred 0   pred 1
+    true 0 (ADL)    53,121      262
+    true 1 (fall)      265    3,456
+
+    ...of which mobifall windows
+    sensitivity  84.5%   specificity  99.6%   false-alarm rate  0.43%
+                    pred 0   pred 1
+    true 0 (ADL)     7,635       33
+    true 1 (fall)       72      393
+
+  cross-dataset: train sisfall -> test ALL mobifall
+    sensitivity  42.6%   specificity  99.7%   false-alarm rate  0.27%
+                    pred 0   pred 1
+    true 0 (ADL)     7,647       21
+    true 1 (fall)      267      198
+
+  cross-dataset: train mobifall -> test ALL sisfall
+    sensitivity  94.3%   specificity  97.1%   false-alarm rate  2.85%
+                    pred 0   pred 1
+    true 0 (ADL)    51,860    1,523
+    true 1 (fall)      212    3,509
+
+Wrote results_raw.csv

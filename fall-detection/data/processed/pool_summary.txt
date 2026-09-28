@@ -1,0 +1,32 @@
+======================================================================
+POOL + ACCEPTANCE CHECKS
+======================================================================
+  [PASS] sisfall: every trial uniform 50 Hz (0 trials off-grid)
+  sisfall: 3,958,612 samples -> {'windows': 57104, 'dropped_partial_fall': 497, 'trials_too_short': 0}
+  [PASS] mobifall: every trial uniform 50 Hz (0 trials off-grid)
+  mobifall: 569,805 samples -> {'windows': 8133, 'dropped_partial_fall': 41, 'trials_too_short': 2}
+
+Gravity (still windows, amag std < 0.02 g):
+  [PASS] sisfall: 18,175 still windows, median amag 1.000 g
+  [PASS] mobifall: 3,013 still windows, median amag 1.009 g
+
+Fall peaks (max amag in label=1 windows):
+  [PASS] sisfall: median 5.40 g (p5 2.38, p95 12.22, max 26.38)
+  [PASS] mobifall: median 2.56 g (p5 2.08, p95 3.04, max 3.32)
+
+Placement:
+  [PASS] placements present: ['pocket', 'waist']
+
+Class balance (windows):
+          nonfall  prefall  fall    All
+dataset                                
+mobifall     7668        0   465   8133
+sisfall     50723     2660  3721  57104
+All         58391     2660  4186  65237
+  mobifall: fall 465 / 8,133 = 5.7%  (subjects 24)
+  sisfall: fall 3,721 / 57,104 = 6.5%  (subjects 38)
+
+Distribution check (median of window-mean amag):
+  [PASS] sisfall 1.017 g  mobifall 1.014 g
+
+Wrote data/processed/pooled_windows.parquet: 65,237 windows x 125 samples x 7 channels

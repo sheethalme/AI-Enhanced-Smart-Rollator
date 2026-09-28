@@ -1,0 +1,107 @@
+
+==============================================================================
+SISFALL (Enhanced, 3-class)
+==============================================================================
+Files: ['weights_3.txt', 'x_test_3', 'x_train_3', 'x_val_3', 'y_test_3', 'y_train_3', 'y_val_3']
+Format: headerless binary. x_* = float32, y_* = uint8 one-hot (3 cols).
+        No subject / trial / timestamp info anywhere in the files.
+weights_3.txt: ['3.348391420911527661e+01', '1.076681034482758577e+02', '1.000000000000000000e+00']
+  train: x (77871, 256, 6)  y (77871, 3)  one-hot valid=True  class counts=[74937, 696, 2238]
+  val  : x (20233, 256, 6)  y (20233, 3)  one-hot valid=True  class counts=[19463, 221, 549]
+  test : x (18884, 256, 6)  y (18884, 3)  one-hot valid=True  class counts=[18180, 157, 547]
+
+Columns: none named; 6 channels per sample (presumably ax ay az gx gy gz).
+First 5 samples of window 0:
+         c0        c1        c2        c3        c4        c5
+0  0.015216 -0.230228  0.023034 -0.001939  0.007442 -0.003258
+1  0.015129 -0.230233  0.022899 -0.002033  0.007372 -0.003239
+2  0.015042 -0.230237  0.022752 -0.002142  0.007276 -0.003206
+3  0.014957 -0.230241  0.022593 -0.002266  0.007157 -0.003160
+4  0.014872 -0.230243  0.022424 -0.002403  0.007015 -0.003104
+
+Per-channel stats (train):
+       min     max    mean     std
+c0 -1.2642  1.2157  0.0004  0.0873
+c1 -1.1872  0.7747 -0.1624  0.1265
+c2 -1.2891  1.2683 -0.0245  0.1065
+c3 -2.7446  1.8881 -0.0010  0.0565
+c4 -1.9193  1.6949  0.0045  0.0648
+c5 -1.7264  1.7403 -0.0006  0.0512
+
+Gravity check: 29529 near-still windows, median amag = 0.2322  (expected 1.0 g) -> implied scale x4.31
+Per-class amag peak (median / p95) and gyro-mag peak median:
+  class 0: n= 74937  amag peak 0.255 / 0.586   gyro peak 0.085
+  class 1: n=   696  amag peak 0.624 / 0.811   gyro peak 0.249
+  class 2: n=  2238  amag peak 0.749 / 1.112   gyro peak 0.617
+
+Sampling rate: no timestamps. 256 samples/window; SisFall native rate is 200 Hz -> 1.28 s/window IF not resampled.
+Consecutive-window best-overlap shifts (random => shuffled, not trial order): [1, 1, 210, 168, 146, 230, 205, 213, 6, 215, 87, 1, 1, 244, 255, 161, 255, 122, 199, 192]
+Label sequence, first 80 windows: 00000000000000000000100000000000000020000000000000000000000000000000000000000000
+Fall/ADL encoding: one-hot y column per WINDOW (not per sample).
+
+==============================================================================
+MOBIFALL v2.0
+==============================================================================
+Layout: subN/{ADL|FALLS}/<CODE>/<CODE>_<sensor>_<subject>_<trial>.txt
+1890 data files, subjects: [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(29), np.int64(30), np.int64(31)]
+Sensor counts: {'acc': 630, 'gyro': 630, 'ori': 630}
+acc trials per (folder, code):
+folder  code
+ADL     CSI     54
+        CSO     54
+        JOG     27
+        JUM     27
+        SCH     54
+        STD      9
+        STN     54
+        STU     54
+        WAL      9
+FALLS   BSC     72
+        FKL     72
+        FOL     72
+        SDL     72
+Subjects with ADL recordings: [np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11)]
+Fall/ADL encoding: folder name (FALLS vs ADL) == 3-letter code in ['BSC', 'FKL', 'FOL', 'SDL'] -> whole-trial label, no per-sample labels.
+Placement: not in files; MobiFall = smartphone in trouser pocket (all trials).
+
+--- acc: header comment ---
+#Acceleration force along the x y z axes (including gravity).
+#timestamp(ns),x,y,z(m/s^2)
+Example sub1/FALLS/BSC/BSC_acc_1_1.txt first 5 rows:
+            t_ns         x         y         z
+0  2318482693000  0.890643 -9.576807 -0.019154
+1  2318492108000  0.919373 -9.595961 -0.057461
+2  2318503365000  0.871489 -9.595961 -0.057461
+3  2318512831000  0.852336 -9.643845 -0.038307
+4  2318523222000  0.871489 -9.634268 -0.057461
+Stats over all 630 acc files (1,044,765 samples):
+       min      max    mean     std
+x -19.5080  19.5367 -0.2456  4.0608
+y -19.4505  19.5941  7.2174  5.2183
+z -19.4984  19.5367  1.3799  4.2196
+|vector| median = 9.882
+dt (ms): median 10.54  p5 9.54  p95 13.67  max 1116.8  non-positive 0
+Per-file mean rate (Hz): median 85.4  min 54.2  max 97.1
+
+--- gyro: header comment ---
+#Rate of rotation around the x y z axes (Angular velocity).
+#timestamp(ns),x,y,z(rad/s)
+Example sub1/FALLS/BSC/BSC_gyro_1_1.txt first 5 rows:
+            t_ns         x         y         z
+0  2318294309000  6.015801 -0.966694 -8.615032
+1  2318299108000 -2.604119 -3.108388  8.485834
+2  2318304077000 -8.140085  0.739147  0.039706
+3  2318309166000 -1.177137  0.736093  0.035125
+4  2318314032000 -1.172250  0.741285  0.033292
+Stats over all 630 gyro files (2,389,589 samples):
+       min      max    mean     std
+x  -9.9938   9.9953 -0.0241  1.0211
+y -10.0078  10.0081 -0.0041  1.0022
+z -10.0060  10.0069 -0.0083  0.6803
+|vector| median = 0.500
+dt (ms): median 5.00  p5 4.74  p95 5.27  max 956.8  non-positive 1
+Per-file mean rate (Hz): median 200.0  min 154.6  max 200.1
+
+acc/gyro alignment (sub1 FOL 1): acc 812 rows, gyro 1999 rows; start offset 120.5 ms, end offset -7.2 ms -> separate clocks per sensor
+STD (standing) acc |a| median per trial: [9.943, 9.903, 9.908, 9.89, 9.894, 9.896, 9.904, 9.916, 9.904] (m/s^2?)
+Fall trials acc peak (after /9.81): median 2.70 g, p5 2.18, p95 3.15
