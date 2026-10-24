@@ -1,0 +1,26 @@
+GAIT INSTABILITY CLASSIFIER - TRAINING & EVALUATION REPORT
+============================================================
+Algorithm:       Random Forest (n_estimators=150, max_depth=12)
+Validation:      5-Fold GroupKFold (Subject-Independent, 0 leakage)
+Total Windows:   17,902
+Total Subjects:  47
+
+Cross-Validation Performance:
+  ROC-AUC:       0.9891
+  Sensitivity:   88.5%
+  Specificity:   99.7%
+  Precision:     92.0%
+  F1 Score:      0.9018
+  Accuracy:      99.2%
+
+Top 10 Feature Importances:
+  step_peak_intensity_std  : 0.1583
+  step_intensity_cv        : 0.1328
+  step_peak_intensity_mean : 0.0930
+  gyro_sway_rms            : 0.0764
+  acc_jerk_rms             : 0.0589
+  step_regularity          : 0.0580
+  stride_regularity        : 0.0482
+  gyro_sma                 : 0.0479
+  stride_symmetry          : 0.0450
+  gmag_mean                : 0.0446
