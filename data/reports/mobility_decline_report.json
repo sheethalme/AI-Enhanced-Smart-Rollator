@@ -1,0 +1,272 @@
+{
+  "user_id": "SE01",
+  "duration_days": 28,
+  "baseline_summary": {
+    "cadence_hz": 1.776,
+    "step_regularity": 0.486,
+    "stride_variability_cv": 16.32,
+    "lateral_sway_rms": 0.214
+  },
+  "trend_evaluation": {
+    "trend": "declining",
+    "slope_points_per_week": -9.93,
+    "score_change": -18.1,
+    "current_score": 69.9,
+    "alert_triggered": true,
+    "recommendation": "Warning: Progressive mobility decline detected. Caregiver check recommended."
+  },
+  "daily_history": [
+    {
+      "day": 1,
+      "cadence_hz": 1.786,
+      "step_regularity": 0.484,
+      "stride_variability_cv": 16.58,
+      "lateral_sway_rms": 0.226,
+      "active_minutes": 24.5,
+      "mobility_score": 94.1
+    },
+    {
+      "day": 2,
+      "cadence_hz": 1.771,
+      "step_regularity": 0.51,
+      "stride_variability_cv": 16.63,
+      "lateral_sway_rms": 0.21,
+      "active_minutes": 26.1,
+      "mobility_score": 96.4
+    },
+    {
+      "day": 3,
+      "cadence_hz": 1.767,
+      "step_regularity": 0.479,
+      "stride_variability_cv": 16.42,
+      "lateral_sway_rms": 0.198,
+      "active_minutes": 21.6,
+      "mobility_score": 95.2
+    },
+    {
+      "day": 4,
+      "cadence_hz": 1.765,
+      "step_regularity": 0.471,
+      "stride_variability_cv": 16.45,
+      "lateral_sway_rms": 0.206,
+      "active_minutes": 22.2,
+      "mobility_score": 94.8
+    },
+    {
+      "day": 5,
+      "cadence_hz": 1.805,
+      "step_regularity": 0.483,
+      "stride_variability_cv": 16.35,
+      "lateral_sway_rms": 0.202,
+      "active_minutes": 23.9,
+      "mobility_score": 94.9
+    },
+    {
+      "day": 6,
+      "cadence_hz": 1.778,
+      "step_regularity": 0.469,
+      "stride_variability_cv": 16.47,
+      "lateral_sway_rms": 0.209,
+      "active_minutes": 24.4,
+      "mobility_score": 94.9
+    },
+    {
+      "day": 7,
+      "cadence_hz": 1.764,
+      "step_regularity": 0.514,
+      "stride_variability_cv": 16.32,
+      "lateral_sway_rms": 0.205,
+      "active_minutes": 26.6,
+      "mobility_score": 96.7
+    },
+    {
+      "day": 8,
+      "cadence_hz": 1.743,
+      "step_regularity": 0.483,
+      "stride_variability_cv": 15.74,
+      "lateral_sway_rms": 0.205,
+      "active_minutes": 25.1,
+      "mobility_score": 94.9
+    },
+    {
+      "day": 9,
+      "cadence_hz": 1.773,
+      "step_regularity": 0.477,
+      "stride_variability_cv": 16.68,
+      "lateral_sway_rms": 0.215,
+      "active_minutes": 21.5,
+      "mobility_score": 94.8
+    },
+    {
+      "day": 10,
+      "cadence_hz": 1.735,
+      "step_regularity": 0.461,
+      "stride_variability_cv": 17.36,
+      "lateral_sway_rms": 0.223,
+      "active_minutes": 20.7,
+      "mobility_score": 91.7
+    },
+    {
+      "day": 11,
+      "cadence_hz": 1.747,
+      "step_regularity": 0.456,
+      "stride_variability_cv": 16.87,
+      "lateral_sway_rms": 0.227,
+      "active_minutes": 26.0,
+      "mobility_score": 92.0
+    },
+    {
+      "day": 12,
+      "cadence_hz": 1.75,
+      "step_regularity": 0.443,
+      "stride_variability_cv": 17.22,
+      "lateral_sway_rms": 0.227,
+      "active_minutes": 25.6,
+      "mobility_score": 91.1
+    },
+    {
+      "day": 13,
+      "cadence_hz": 1.713,
+      "step_regularity": 0.447,
+      "stride_variability_cv": 17.1,
+      "lateral_sway_rms": 0.217,
+      "active_minutes": 25.0,
+      "mobility_score": 91.3
+    },
+    {
+      "day": 14,
+      "cadence_hz": 1.741,
+      "step_regularity": 0.443,
+      "stride_variability_cv": 18.15,
+      "lateral_sway_rms": 0.231,
+      "active_minutes": 21.8,
+      "mobility_score": 89.3
+    },
+    {
+      "day": 15,
+      "cadence_hz": 1.707,
+      "step_regularity": 0.457,
+      "stride_variability_cv": 18.06,
+      "lateral_sway_rms": 0.244,
+      "active_minutes": 17.5,
+      "mobility_score": 88.0
+    },
+    {
+      "day": 16,
+      "cadence_hz": 1.702,
+      "step_regularity": 0.426,
+      "stride_variability_cv": 18.28,
+      "lateral_sway_rms": 0.236,
+      "active_minutes": 18.3,
+      "mobility_score": 87.0
+    },
+    {
+      "day": 17,
+      "cadence_hz": 1.667,
+      "step_regularity": 0.42,
+      "stride_variability_cv": 19.32,
+      "lateral_sway_rms": 0.235,
+      "active_minutes": 20.2,
+      "mobility_score": 84.7
+    },
+    {
+      "day": 18,
+      "cadence_hz": 1.647,
+      "step_regularity": 0.419,
+      "stride_variability_cv": 19.19,
+      "lateral_sway_rms": 0.238,
+      "active_minutes": 22.4,
+      "mobility_score": 84.0
+    },
+    {
+      "day": 19,
+      "cadence_hz": 1.645,
+      "step_regularity": 0.41,
+      "stride_variability_cv": 19.1,
+      "lateral_sway_rms": 0.243,
+      "active_minutes": 20.2,
+      "mobility_score": 83.3
+    },
+    {
+      "day": 20,
+      "cadence_hz": 1.599,
+      "step_regularity": 0.39,
+      "stride_variability_cv": 19.81,
+      "lateral_sway_rms": 0.249,
+      "active_minutes": 20.1,
+      "mobility_score": 79.9
+    },
+    {
+      "day": 21,
+      "cadence_hz": 1.586,
+      "step_regularity": 0.369,
+      "stride_variability_cv": 19.9,
+      "lateral_sway_rms": 0.246,
+      "active_minutes": 19.8,
+      "mobility_score": 78.8
+    },
+    {
+      "day": 22,
+      "cadence_hz": 1.61,
+      "step_regularity": 0.395,
+      "stride_variability_cv": 20.39,
+      "lateral_sway_rms": 0.257,
+      "active_minutes": 19.6,
+      "mobility_score": 78.9
+    },
+    {
+      "day": 23,
+      "cadence_hz": 1.551,
+      "step_regularity": 0.358,
+      "stride_variability_cv": 20.63,
+      "lateral_sway_rms": 0.278,
+      "active_minutes": 19.0,
+      "mobility_score": 73.7
+    },
+    {
+      "day": 24,
+      "cadence_hz": 1.583,
+      "step_regularity": 0.35,
+      "stride_variability_cv": 20.42,
+      "lateral_sway_rms": 0.271,
+      "active_minutes": 20.5,
+      "mobility_score": 75.1
+    },
+    {
+      "day": 25,
+      "cadence_hz": 1.581,
+      "step_regularity": 0.328,
+      "stride_variability_cv": 21.74,
+      "lateral_sway_rms": 0.253,
+      "active_minutes": 19.8,
+      "mobility_score": 74.0
+    },
+    {
+      "day": 26,
+      "cadence_hz": 1.596,
+      "step_regularity": 0.318,
+      "stride_variability_cv": 21.24,
+      "lateral_sway_rms": 0.268,
+      "active_minutes": 17.2,
+      "mobility_score": 73.3
+    },
+    {
+      "day": 27,
+      "cadence_hz": 1.509,
+      "step_regularity": 0.326,
+      "stride_variability_cv": 21.32,
+      "lateral_sway_rms": 0.274,
+      "active_minutes": 16.0,
+      "mobility_score": 70.8
+    },
+    {
+      "day": 28,
+      "cadence_hz": 1.558,
+      "step_regularity": 0.304,
+      "stride_variability_cv": 21.9,
+      "lateral_sway_rms": 0.28,
+      "active_minutes": 15.0,
+      "mobility_score": 69.9
+    }
+  ]
+}

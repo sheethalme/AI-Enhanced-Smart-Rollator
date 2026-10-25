@@ -1,0 +1,114 @@
+{
+  "model_type": "RandomForestClassifier",
+  "sample_rate_hz": 50,
+  "window_samples": 125,
+  "window_seconds": 2.5,
+  "stride_samples": 62,
+  "raw_channels": [
+    "ax",
+    "ay",
+    "az",
+    "gx",
+    "gy",
+    "gz"
+  ],
+  "acc_clip_g": 2.0,
+  "threshold": 0.4,
+  "n_features": 26,
+  "feature_names": [
+    "cadence_fft_hz",
+    "cadence_spm",
+    "spectral_power_gait",
+    "spectral_entropy",
+    "step_regularity",
+    "stride_regularity",
+    "stride_symmetry",
+    "harmonic_ratio",
+    "step_count",
+    "stride_time_mean",
+    "stride_time_std",
+    "stride_variability_cv",
+    "step_peak_intensity_mean",
+    "step_peak_intensity_std",
+    "step_intensity_cv",
+    "lateral_sway_rms",
+    "lateral_sway_range",
+    "vertical_rms",
+    "anteroposterior_rms",
+    "sway_ratio",
+    "acc_jerk_mean",
+    "acc_jerk_rms",
+    "acc_sma",
+    "gyro_sma",
+    "gyro_sway_rms",
+    "gmag_mean"
+  ],
+  "evaluation_metrics": {
+    "roc_auc": 0.9891211131799625,
+    "sensitivity": 0.8846675712347354,
+    "specificity": 0.9966792892513836,
+    "precision": 0.919605077574048,
+    "f1_score": 0.9017980636237898,
+    "accuracy": 0.9920679253714669,
+    "threshold": 0.4,
+    "true_positives": 652,
+    "false_positives": 57,
+    "true_negatives": 17108,
+    "false_negatives": 85
+  },
+  "top_features": [
+    {
+      "feature": "step_peak_intensity_std",
+      "importance": 0.15825150451843523
+    },
+    {
+      "feature": "step_intensity_cv",
+      "importance": 0.13283960347435142
+    },
+    {
+      "feature": "step_peak_intensity_mean",
+      "importance": 0.09301510657332673
+    },
+    {
+      "feature": "gyro_sway_rms",
+      "importance": 0.0763655647579046
+    },
+    {
+      "feature": "acc_jerk_rms",
+      "importance": 0.058899981510115954
+    },
+    {
+      "feature": "step_regularity",
+      "importance": 0.0580054398431677
+    },
+    {
+      "feature": "stride_regularity",
+      "importance": 0.04821170003868733
+    },
+    {
+      "feature": "gyro_sma",
+      "importance": 0.047856350003159756
+    },
+    {
+      "feature": "stride_symmetry",
+      "importance": 0.045048022490443713
+    },
+    {
+      "feature": "gmag_mean",
+      "importance": 0.04459980964594251
+    }
+  ],
+  "training_dataset": {
+    "total_windows": 17902,
+    "stable_windows": 17165,
+    "unstable_windows": 737,
+    "subjects": 47,
+    "cohorts": {
+      "young": 9385,
+      "elderly": 5743,
+      "adult": 2774
+    }
+  },
+  "sklearn_version": "1.9.0",
+  "numpy_version": "2.4.6"
+}

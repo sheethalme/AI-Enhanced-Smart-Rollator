@@ -1,0 +1,54 @@
+PER-USER PERSONALIZATION EVALUATION REPORT
+============================================================
+Subject    Cohort   Norm Wins  Base Cadence  Base Reg  Stumbles  Detected
+----------------------------------------------------------------------
+SA01       young          389        1.77 Hz     0.382        24        24
+SA02       young          390        1.76 Hz     0.401        23        23
+SA03       young          388        1.83 Hz     0.413        25        23
+SA04       young          389        1.74 Hz     0.389        24        24
+SA05       young          388        1.82 Hz     0.365        25        23
+SA06       young          388        1.67 Hz     0.377        25        25
+SA07       young          386        1.68 Hz     0.399        27        26
+SA08       young          390        1.78 Hz     0.366        23        19
+SA09       young          391        1.77 Hz     0.331        22        22
+SA10       young          388        1.62 Hz     0.394        25        25
+SA11       young          392        1.76 Hz     0.399        21        19
+SA12       young          389        1.70 Hz     0.379        24        24
+SA13       young          390        1.76 Hz     0.407        23        23
+SA14       young          388        1.77 Hz     0.392        25        23
+SA15       young          292        1.73 Hz     0.459        26        26
+SA16       young          390        1.82 Hz     0.350        23        22
+SA17       young          392        1.75 Hz     0.352        21        21
+SA18       young          391        1.73 Hz     0.319        22        20
+SA19       young          386        1.78 Hz     0.364        27        26
+SA20       young          369        1.80 Hz     0.342        25        24
+SA21       young          383        1.70 Hz     0.331        30        24
+SA22       young          387        1.80 Hz     0.376        26        24
+SA23       young          385        1.76 Hz     0.368        28        23
+SE01       elderly        481        1.78 Hz     0.486         6         6
+SE02       elderly        325        1.87 Hz     0.374        10        10
+SE03       elderly        356        1.83 Hz     0.404        10        10
+SE04       elderly        329        1.76 Hz     0.350        11         9
+SE05       elderly        339        1.64 Hz     0.343        11         9
+SE06       elderly        399        1.98 Hz     0.387        14        14
+SE07       elderly        358        1.86 Hz     0.387        15        10
+SE08       elderly        361        1.86 Hz     0.383        12        11
+SE09       elderly        359        1.87 Hz     0.361        14         8
+SE10       elderly        362        1.77 Hz     0.379        11        11
+SE11       elderly        363        1.80 Hz     0.381        10        10
+SE12       elderly        360        1.87 Hz     0.385        13        13
+SE13       elderly        361        1.90 Hz     0.376        12         7
+SE14       elderly        360        1.86 Hz     0.381        13         9
+SE15       elderly        457        1.94 Hz     0.351        11         6
+mobi_02    adult          309        1.65 Hz     0.321         0         0
+mobi_03    adult          309        1.88 Hz     0.473         0         0
+mobi_04    adult          309        1.96 Hz     0.526         0         0
+mobi_05    adult          307        2.03 Hz     0.570         0         0
+mobi_07    adult          307        1.76 Hz     0.370         0         0
+mobi_08    adult          308        2.26 Hz     0.262         0         0
+mobi_09    adult          308        1.90 Hz     0.476         0         0
+mobi_10    adult          309        1.98 Hz     0.493         0         0
+mobi_11    adult          308        2.40 Hz     0.529         0         0
+----------------------------------------------------------------------
+
+Personalized Anomaly Detection across all stumble trials: 676/737 detected (91.7%)
