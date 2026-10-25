@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rollator Sensor</title>
+<style>body{font-family:sans-serif;max-width:420px;margin:1rem auto;padding:0 1rem}
+button,select{font-size:1.1rem;padding:.6rem;margin:.3rem 0;width:100%}
+#state{font-size:1.6rem;font-weight:bold;margin:1rem 0}pre{background:#eee;padding:.5rem}</style></head><body>
+<h2>Rollator Sensor (phone)</h2>
+<select id="label"><option value="normal">normal walking</option>
+<option value="unstable">unstable walking</option><option value="rest">rest</option></select>
+<label><input type="checkbox" id="rec"> Record CSV on server</label>
+<button id="start">Start streaming</button>
+<button id="ok">I'm OK (cancel alert)</button>
+<div id="state">-</div><pre id="log">waiting</pre>
+<script>
+const G = 9.80665; let ws, buf = [];
+document.getElementById("start").onclick = async () => {
+  if (typeof DeviceMotionEvent !== "undefined" && DeviceMotionEvent.requestPermission) {
+    if (await DeviceMotionEvent.requestPermission() !== "granted") return alert("Permission denied");
+  }
+  const q = `label=${label.value}&record=${rec.checked ? 1 : 0}`;
+  ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/stream?${q}`);
+  ws.onmessage = e => { const d = JSON.parse(e.data);
+    state.textContent = d.state; log.textContent = JSON.stringify(d, null, 1); };
+  window.addEventListener("devicemotion", e => {
+    const a = e.accelerationIncludingGravity, r = e.rotationRate; if (!a || !r) return;
+    // data contract: g and deg/s, ms timestamps
+    buf.push([Date.now(), a.x / G, a.y / G, a.z / G, r.alpha, r.beta, r.gamma]);
+  });
+  setInterval(() => { if (ws.readyState === 1 && buf.length) {
+    ws.send(JSON.stringify({samples: buf})); buf = []; } }, 500);
+};
+document.getElementById("ok").onclick = () => ws && ws.send(JSON.stringify({cmd: "ok"}));
+</script></body></html>

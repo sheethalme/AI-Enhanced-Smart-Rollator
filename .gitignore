@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .mplcache/
 .DS_Store
+rollator.db
+.venv/
+data/own_captures/*.csv
