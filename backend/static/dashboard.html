@@ -249,7 +249,21 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: all 0.25s ease;
     }
+
+    .metric-card.card-offline {
+      opacity: 0.65;
+      filter: grayscale(0.85);
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .metric-card.card-offline .sub-info {
+      color: #64748b;
+      font-weight: 500;
+    }
+
 
     .metric-header {
       display: flex;
@@ -564,7 +578,7 @@
           <div id="bar-fall-prob" class="bar-fill"></div>
           <div class="bar-threshold-marker" style="left: 80%;" title="Threshold: 0.80"></div>
         </div>
-        <div class="sub-info">Consecutive windows required: 2</div>
+        <div class="sub-info" id="sub-fall-prob" data-default="Consecutive windows required: 2">Consecutive windows required: 2</div>
       </div>
 
       <!-- Gait Instability -->
@@ -578,7 +592,7 @@
           <div id="bar-instability" class="bar-fill"></div>
           <div class="bar-threshold-marker" style="left: 40%;" title="Threshold: 0.40"></div>
         </div>
-        <div class="sub-info">Random Forest Biomechanical Model</div>
+        <div class="sub-info" id="sub-instability" data-default="Random Forest Biomechanical Model">Random Forest Biomechanical Model</div>
       </div>
 
       <!-- Cadence -->
@@ -587,7 +601,7 @@
           <span class="metric-label">Cadence</span>
         </div>
         <div class="metric-val" id="val-cadence">n/a</div>
-        <div class="sub-info">Steps per minute</div>
+        <div class="sub-info" id="sub-cadence" data-default="Steps per minute">Steps per minute</div>
       </div>
 
       <!-- Step Regularity -->
@@ -596,17 +610,18 @@
           <span class="metric-label">Step Regularity</span>
         </div>
         <div class="metric-val" id="val-regularity">n/a</div>
-        <div class="sub-info">Autocorrelation symmetry (0 - 1)</div>
+        <div class="sub-info" id="sub-regularity" data-default="Autocorrelation symmetry (0 - 1)">Autocorrelation symmetry (0 - 1)</div>
       </div>
 
       <!-- Mobility Score -->
       <div class="metric-card" id="card-mobility">
         <div class="metric-header">
-          <span class="metric-label">Mobility Score</span>
+          <span class="metric-label">Mobility Score (this window)</span>
         </div>
         <div class="metric-val" id="val-mobility">n/a</div>
-        <div class="sub-info">Composite index (0 - 100)</div>
+        <div class="sub-info" id="sub-mobility" data-default="Composite index (0 - 100)">Composite index (0 - 100)</div>
       </div>
+
     </section>
 
     <!-- 4. LIVE CHART -->
@@ -745,7 +760,7 @@
             borderWidth: 2,
             pointRadius: 2,
             pointHoverRadius: 4,
-            tension: 0.25,
+            tension: 0,
             fill: false
           },
           {
@@ -756,7 +771,7 @@
             borderWidth: 2,
             pointRadius: 2,
             pointHoverRadius: 4,
-            tension: 0.25,
+            tension: 0,
             fill: false
           }
         ]
@@ -804,10 +819,11 @@
           borderWidth: 2.5,
           pointRadius: 4,
           pointBackgroundColor: '#2563eb',
-          tension: 0.3,
+          tension: 0,
           fill: true
         }]
       },
+
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -846,7 +862,7 @@
     };
 
     // State Banner Render Function
-    function renderStateBanner(state, pendingSecondsLeft) {
+    function renderStateBanner(data) {
       const banner = document.getElementById('state-banner');
       const icon = document.getElementById('banner-icon');
       const title = document.getElementById('banner-title');
@@ -854,7 +870,18 @@
 
       banner.className = '';
 
-      switch (state) {
+      // When connected=false and a previous state exists: show grey banner "OFFLINE. Last state: <STATE> at <time>"
+      const hasPreviousState = data.last_update !== null && data.last_update !== undefined && data.state && data.state !== 'NO_DATA';
+      if (!data.connected && hasPreviousState) {
+        banner.classList.add('banner-no_data');
+        icon.textContent = '📡';
+        const t = new Date(data.last_update * 1000).toLocaleTimeString();
+        title.textContent = 'OFFLINE';
+        desc.textContent = `OFFLINE. Last state: ${data.state} at ${t}`;
+        return;
+      }
+
+      switch (data.state) {
         case 'NORMAL':
           banner.classList.add('banner-normal');
           icon.textContent = '✓';
@@ -872,7 +899,7 @@
         case 'FALL_PENDING':
           banner.classList.add('banner-fall_pending');
           icon.textContent = '🚨';
-          const sec = pendingSecondsLeft !== null && pendingSecondsLeft !== undefined ? Math.round(pendingSecondsLeft) : 15;
+          const sec = data.pending_seconds_left !== null && data.pending_seconds_left !== undefined ? Math.round(data.pending_seconds_left) : 15;
           title.innerHTML = `FALL DETECTED <span class="countdown-pill">${sec}s</span>`;
           desc.innerHTML = `Fall detected! Auto-alerting caregiver in <strong>${sec} seconds</strong> unless user cancels.`;
           break;
@@ -881,7 +908,7 @@
           banner.classList.add('banner-alert_sent');
           icon.textContent = '🛑';
           title.textContent = 'ALERT SENT';
-          desc.textContent = 'Emergency notification dispatched to caregiver! Check on user immediately.';
+          desc.textContent = 'Alert triggered. Caregiver notification not connected yet (prototype).';
           break;
 
         case 'NO_DATA':
@@ -900,12 +927,18 @@
       return Number(val).toFixed(decimals);
     }
 
+    let lastStatusData = null;
+
     // Poll /api/status
     async function fetchStatus() {
+      const metricCards = document.querySelectorAll('.metric-card');
+      const subInfos = document.querySelectorAll('.metric-card .sub-info');
+
       try {
         const res = await fetch('/api/status');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        lastStatusData = data;
 
         // Update connection badge
         const badge = document.getElementById('connection-badge');
@@ -919,7 +952,27 @@
         }
 
         // Render banner
-        renderStateBanner(data.state, data.pending_seconds_left);
+        renderStateBanner(data);
+
+        // When connected=false and a previous state exists: grey out metric cards and add "last reading <N> s ago" to each
+        const hasPreviousState = data.last_update !== null && data.last_update !== undefined && data.state && data.state !== 'NO_DATA';
+        if (!data.connected && hasPreviousState) {
+          metricCards.forEach(card => card.classList.add('card-offline'));
+          const secAgo = data.seconds_since_update !== null && data.seconds_since_update !== undefined
+            ? Math.round(data.seconds_since_update)
+            : Math.round((Date.now() / 1000) - data.last_update);
+          const agoText = `last reading ${secAgo} s ago`;
+          subInfos.forEach(el => {
+            el.textContent = agoText;
+          });
+        } else {
+          metricCards.forEach(card => card.classList.remove('card-offline'));
+          subInfos.forEach(el => {
+            if (el.dataset.default) {
+              el.textContent = el.dataset.default;
+            }
+          });
+        }
 
         // Metric Card 1: Fall Probability
         const fpEl = document.getElementById('val-fall-prob');
@@ -959,7 +1012,7 @@
           ? Number(data.step_regularity).toFixed(3)
           : 'n/a';
 
-        // Metric Card 5: Mobility Score
+        // Metric Card 5: Mobility Score (this window)
         const mobEl = document.getElementById('val-mobility');
         mobEl.textContent = data.mobility_score !== null && data.mobility_score !== undefined
           ? Math.round(data.mobility_score)
@@ -971,8 +1024,20 @@
         const badgeText = document.getElementById('connection-text');
         badge.className = 'badge badge-offline';
         badgeText.textContent = 'OFFLINE';
+
+        if (lastStatusData && lastStatusData.last_update) {
+          lastStatusData.connected = false;
+          lastStatusData.seconds_since_update = Math.round((Date.now() / 1000) - lastStatusData.last_update);
+          renderStateBanner(lastStatusData);
+          metricCards.forEach(card => card.classList.add('card-offline'));
+          const secAgo = Math.round(lastStatusData.seconds_since_update);
+          subInfos.forEach(el => {
+            el.textContent = `last reading ${secAgo} s ago`;
+          });
+        }
       }
     }
+
 
     // Poll /api/readings?minutes=5
     async function fetchReadings() {
