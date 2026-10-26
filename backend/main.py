@@ -10,7 +10,27 @@ from fastapi.responses import FileResponse
 from . import db
 from .alert_logic import AlertEngine
 from .notify import notify_caregiver
-from .stubs import predict_fall, predict_gait
+from .stubs import predict_fall, predict_gait, get_mobility_report
+
+
+
+
+# ============================================================
+# LATEST STATE (CAREGIVER DASHBOARD)
+# ============================================================
+
+LATEST = {
+    "state": "NO_DATA",
+    "fall_prob": None,
+    "instability": None,
+    "cadence_spm": None,
+    "step_regularity": None,
+    "mobility_score": None,
+    "session": None,
+    "last_update": None,
+    "pending_since": None,
+}
+
 
 
 # ============================================================
@@ -176,6 +196,69 @@ def events():
 
 
 # ============================================================
+# CAREGIVER DASHBOARD & STATUS APIS
+# ============================================================
+
+@app.get("/dashboard")
+def dashboard():
+    """
+    Serve the caregiver dashboard webpage.
+    """
+
+    return FileResponse(
+        STATIC / "dashboard.html"
+    )
+
+
+@app.get("/api/status")
+def status():
+    """
+    Return latest device status, connection health, and thresholds.
+    """
+
+    now = time.time()
+    last_u = LATEST["last_update"]
+    connected = bool(last_u is not None and (now - last_u) <= 5.0)
+    sec_since = round(now - last_u, 1) if last_u is not None else None
+
+    pending_left = None
+    if LATEST["state"] == "FALL_PENDING" and LATEST["pending_since"] is not None:
+        elapsed = now - LATEST["pending_since"]
+        pending_left = max(0.0, round(15.0 - elapsed, 1))
+
+    res = dict(LATEST)
+    res.update({
+        "connected": connected,
+        "seconds_since_update": sec_since,
+        "pending_seconds_left": pending_left,
+        "thresholds": {"fall": 0.8, "unstable": 0.40},
+    })
+    return res
+
+
+@app.get("/api/readings")
+def readings(minutes: float = 10.0):
+    """
+    Return recent window readings (oldest to newest).
+    """
+
+    return db.recent_readings(minutes=minutes)
+
+
+@app.get("/api/mobility_report")
+def mobility_report():
+    """
+    Return Member 2's mobility health and decline trajectory report.
+    """
+
+    rep = get_mobility_report(user_id="SE01", days=14)
+    rep = dict(rep)
+    rep["simulated"] = True
+    return rep
+
+
+
+# ============================================================
 # WEBSOCKET SENSOR STREAM
 # ============================================================
 
@@ -315,6 +398,10 @@ async def stream(
                         0
                     )
 
+                LATEST["state"] = "NORMAL"
+                LATEST["pending_since"] = None
+                LATEST["last_update"] = now
+
                 # Tell phone that the alert was cancelled
                 await ws.send_json({
                     "state": "normal",
@@ -324,6 +411,7 @@ async def stream(
                 })
 
                 continue
+
 
             # ------------------------------------------------
             # CHECK FOR SENSOR SAMPLES
@@ -397,6 +485,14 @@ async def stream(
                     "instability_score"
                 ]
 
+                cadence = gait_result.get("cadence_spm")
+                reg = gait_result.get("step_regularity")
+                mob = gait_result.get("mobility_score")
+
+                cadence = float(cadence) if cadence is not None else None
+                reg = float(reg) if reg is not None else None
+                mob = float(mob) if mob is not None else None
+
                 # ============================================
                 # ALERT ENGINE
                 # ============================================
@@ -405,6 +501,33 @@ async def stream(
                     fp,
                     ins,
                     now
+                )
+
+                if ev == "fall_detected":
+                    LATEST["pending_since"] = now
+                elif state != "FALL_PENDING":
+                    LATEST["pending_since"] = None
+
+                LATEST.update({
+                    "state": state,
+                    "fall_prob": float(fp),
+                    "instability": float(ins),
+                    "cadence_spm": cadence,
+                    "step_regularity": reg,
+                    "mobility_score": mob,
+                    "session": session,
+                    "last_update": now,
+                })
+
+                db.insert_reading(
+                    session=session,
+                    state=state,
+                    fall_prob=float(fp),
+                    instability=float(ins),
+                    cadence_spm=cadence,
+                    step_regularity=reg,
+                    mobility_score=mob,
+                    ts=now,
                 )
 
                 print(
@@ -486,15 +609,6 @@ async def stream(
                             }
                         )
 
-                        print(
-                            "[NOTIFY CAREGIVER]",
-                            ev,
-                            {
-                                "session": session,
-                                "fall_prob": float(lfp),
-                                "instability": float(lins)
-                            }
-                        )
 
     # ========================================================
     # PHONE DISCONNECTED

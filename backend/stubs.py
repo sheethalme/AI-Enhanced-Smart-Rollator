@@ -23,6 +23,13 @@ if not USE_STUBS:
             sys.path.append(str(_p))
     from predict import predict_fall as _real_predict_fall          # Member 1
     from predict_gait import predict_gait as _real_predict_gait    # Member 2
+    try:
+        from predict_gait import get_mobility_report as _real_get_mobility_report
+    except ImportError:
+        _real_get_mobility_report = None
+else:
+    _real_get_mobility_report = None
+
 
 
 def _mag(window):
@@ -51,3 +58,57 @@ def predict_gait(window, user_id=None) -> dict:
     except ValueError as e:
         print(f"[GAIT] window rejected: {e}")
         return {"instability_score": 0.0}
+
+
+def get_mobility_report(user_id="SE01", days=14) -> dict:
+    if USE_STUBS or _real_get_mobility_report is None:
+        return {
+            "user_id": user_id,
+            "days_analyzed": days,
+            "total_active_minutes": round(25.0 * days, 1),
+            "current_mobility_score": 88.0,
+            "average_mobility_score": 90.0,
+            "average_cadence_hz": 1.70,
+            "average_stride_variability_cv": 9.5,
+            "average_step_regularity": 0.42,
+            "average_lateral_sway_rms": 0.22,
+            "trend": "stable",
+            "slope_points_per_week": 0.0,
+            "caregiver_alert": False,
+            "recommendation": "Walking mobility is consistent with established personal baseline (stub).",
+            "daily_history": [
+                {"day": i, "mobility_score": round(89.0 + (i % 3) * 1.5, 1)}
+                for i in range(1, days + 1)
+            ],
+            "placeholder": True,
+        }
+    try:
+        report = dict(_real_get_mobility_report(user_id=user_id, days=days))
+        # Attach daily_history if available in reports
+        report_file = REPO / "data" / "reports" / "mobility_decline_report.json"
+        if report_file.exists():
+            try:
+                import json
+                data = json.loads(report_file.read_text())
+                report["daily_history"] = data.get("daily_history", [])[-days:]
+            except Exception:
+                pass
+        return report
+    except Exception as e:
+        print(f"[MOBILITY] report error: {e}")
+        return {
+            "user_id": user_id,
+            "days_analyzed": days,
+            "total_active_minutes": 0.0,
+            "current_mobility_score": 0.0,
+            "average_mobility_score": 0.0,
+            "average_cadence_hz": 0.0,
+            "average_stride_variability_cv": 0.0,
+            "average_step_regularity": 0.0,
+            "average_lateral_sway_rms": 0.0,
+            "trend": "unknown",
+            "slope_points_per_week": 0.0,
+            "caregiver_alert": False,
+            "recommendation": f"Report error: {e}",
+            "placeholder": True,
+        }
