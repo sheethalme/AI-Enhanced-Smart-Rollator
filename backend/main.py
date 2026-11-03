@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 
 from . import db
 from .alert_logic import AlertEngine
+from . import notify
 from .notify import notify_caregiver
 from .stubs import predict_fall, predict_gait, get_mobility_report
 
@@ -232,6 +233,8 @@ def status():
         "seconds_since_update": sec_since,
         "pending_seconds_left": pending_left,
         "thresholds": {"fall": 0.8, "unstable": 0.40},
+        "last_notification": notify.last_notification,
+        "notifier_configured": notify.is_configured(),
     })
     return res
 

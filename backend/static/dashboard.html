@@ -908,7 +908,14 @@
           banner.classList.add('banner-alert_sent');
           icon.textContent = '🛑';
           title.textContent = 'ALERT SENT';
-          desc.textContent = 'Alert triggered. Caregiver notification not connected yet (prototype).';
+          if (data.last_notification && data.last_notification.ok === true) {
+            const notifTime = data.last_notification.ts
+              ? new Date(data.last_notification.ts * 1000).toLocaleTimeString()
+              : new Date().toLocaleTimeString();
+            desc.textContent = `Caregiver notified via Telegram at ${notifTime}`;
+          } else {
+            desc.textContent = 'Alert triggered but caregiver notification FAILED / not configured';
+          }
           break;
 
         case 'NO_DATA':
